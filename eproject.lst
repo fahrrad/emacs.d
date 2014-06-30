@@ -1,0 +1,16 @@
+;; -*- mode: Lisp; -*-
+
+(setq prj-version nil)
+
+(setq prj-list
+      '(("project" "c:/Users/coessew/Desktop/project")
+	("eproject" "c:/Users/coessew/apps/emacs4python/extensions/eproject")))
+
+(setq prj-last-open nil)
+
+(setq prj-frame-pos
+      '((top . 14)
+	(left . 0)
+	(width . 93)
+	(height . 68)))
+
