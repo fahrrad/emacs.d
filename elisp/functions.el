@@ -1,4 +1,4 @@
-;; Own function
+;; Own functions
 (defun run-current-file (arguments)
   "Execute the current file.
 For example, if the current buffer is the file xx.py,
@@ -43,16 +43,21 @@ If the file is emacs lisp, run the byte compiled version if exist."
             (message "Running…")
             (shell-command cmdStr "*run-current-file output*" )
             )
-        (message "No recognized program file suffix for this file.")
-        ) ) ))
+        (message "No recognized program file suffix for this file.")))))
 
 (defun installed-or-install-package (package-name)
   "looks if a package is installed, and if not, tries to install it"
   (when (not (package-installed-p package-name))
-    (package-install package-name))
-)
+    (package-install package-name)))
 
 (defun installed-or-install (package-list)
   "Looks at each package in the package-list. If installed, skip. Else, try to
-install it"
-  )
+install it")
+
+(defun replace-last-sexp-with-evaluation ()
+  "A bit like c-m e except, it replaces the sexp with the result. handy for
+on the fly calculations"
+  (interactive)
+  (let ((value (eval (preceding-sexp))))
+    (kill-sexp -1)
+    (insert (format "%S" value))))
