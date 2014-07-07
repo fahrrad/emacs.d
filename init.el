@@ -13,7 +13,8 @@
   (load-file (expand-file-name file user-init-dir)))
 
 ;; Load other files
-(load-user-file "functions.el" )
+(load-user-file "functions.el")
+(load-user-file "lively.el")
 
 
 ;; Packages
@@ -410,7 +411,8 @@ so change the default 'F' binding in the agenda to allow both"
                    (add-to-list 'ac-sources 'ac-source-ropemacs)
                    (auto-complete-mode))))
 
-
+(setenv "PYTHONUNBUFFERED" "x") ;; Solves an issue with Python 3 on
+;; windows, where the output is lagging behind...
 
 ;; Done, start listening
 (server-start)
