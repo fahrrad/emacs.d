@@ -39,6 +39,12 @@
 (unless (package-installed-p 'scala-mode2)
   (package-refresh-contents) (package-install 'scala-mode2))
 
+(unless (package-installed-p 'markdown-mode)
+  (package-refresh-contents)
+  (package-install 'markdown-mode))
+
+(add-to-list 'auto-mode-alist '("\\.md" . markdown-mode))
+
 
 ;; SLIME
 (defun my-slime-setup ()
@@ -372,16 +378,19 @@ so change the default 'F' binding in the agenda to allow both"
 ;; (global-set-key (kbd "M-/") 'hippie-expand)
 
 
-;; Set path ( for finding lein eg)
-(push "c:/Users/coessew/apps" exec-path)
-(push "c:/Users/coessew/Envs/emacs/Scripts" exec-path)
-(setq exec-path (cons "C:/RDE/cygwin_x64/bin" exec-path))
+;; function to add dir to execute path
+(defun add-path-to-exec-dir (dir)
+  "Adds the dirs to the exec-path and PATH env var"
+  (push dir exec-path)
+  (setenv "PATH"
+          (concat (getenv "PATH") ";"
+                  dir)))
 
-(setenv "PATH"
-        (concat
-         "c:/Users/coessew/apps" ";"
-         "c:/Users/coessew/Envs/emacs/Scripts" ";"
-         (getenv "PATH")))
+(setq exec-dirs '("c:/Users/coessew/apps" "c:/Users/coessew/Envs/emacs/Scripts"
+                  "C:/RDE/cygwin_x64/bin" "c:/Users/coessew/Envs/emacs/SCRIPTS"
+                  "~/apps/graphviz/bin/"))
+
+(mapc 'add-path-to-exec-dir exec-dirs )
 
 ;; Bypass proxy for following hosts
 (setenv "http_no_proxy" "*.cropdesign.local")
