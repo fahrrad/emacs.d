@@ -31,13 +31,9 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-
 (package-initialize)
 
 (setq package-enable-at-startup nil)
-
-(unless (package-installed-p 'scala-mode2)
-  (package-refresh-contents) (package-install 'scala-mode2))
 
 (unless (package-installed-p 'markdown-mode)
   (package-refresh-contents)
@@ -47,26 +43,15 @@
 
 
 ;; SLIME
-(defun my-slime-setup ()
-  (require 'slime)
-  (slime-setup))
-(defvar my--slime-setup-done nil)
-(defun my-slime-setup-once ()
-  (unless my--slime-setup-done
-    (my-slime-setup)
-    (setq my--slime-setup-done t)))
-(defadvice lisp-mode (before my-slime-setup-once activate)
-  (my-slime-setup-once))
-
+(add-to-list 'load-path "~/.emacs.d/elisp/ext/slime")
+(require 'slime-autoloads)
+(setq slime-contribs '(slime-fancy))
 (load (expand-file-name "~/quicklisp\\slime-helper.el"))
 (setq inferior-lisp-program "clisp")
-(setq slime-auto-connect 'ask)
+(slime-setup)
+(add-to-list 'slime-mode-hook 'show-paren-mode)
 
-;; Use cperl-mode instead of the default perl-mode
-(add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)\\'" . cperl-mode))
-(add-to-list 'interpreter-mode-alist '("perl" . cperl-mode))
-(add-to-list 'interpreter-mode-alist '("perl5" . cperl-mode))
-(add-to-list 'interpreter-mode-alist '("miniperl" . cperl-mode))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -300,6 +285,12 @@ so change the default 'F' binding in the agenda to allow both"
 (setq org-todo-keywords
       '((sequence "TODO" "WORKING" "|" "DONE" "WAITING FOR")))
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t))) ; this line activates dot
+
+
+
 ;; emacs  groovy
 (add-to-list 'load-path "~/sources/emacs/groovy/")
 (add-to-list 'load-path "~/sources/emacs/dash.el/")
@@ -318,19 +309,11 @@ so change the default 'F' binding in the agenda to allow both"
 
 ;; python-emacs 
 ;; (load-file "C:/Users/coessew/apps/emacs4python/epy-init.el")
-
-
-
-
 ;; clojure 
 ;; (require 'paredit) if you didn't install it via package.el
-(defvar my-packages '(starter-kit
-                      starter-kit-lisp
-                      starter-kit-bindings
-                      starter-kit-eshell
-                      clojure-mode
-                      clojure-test-mode
-                      cider))
+(defvar my-packages '(cider
+                      color-theme
+                      paredit))
 
 (dolist (p my-packages)
    (when (not (package-installed-p p))
@@ -347,7 +330,7 @@ so change the default 'F' binding in the agenda to allow both"
 ;; color-scheme
 (require 'color-theme)
 (color-theme-initialize)
-(color-theme-clarity)
+(color-theme-standard)
 
 ;; No toolbar please
 (tool-bar-mode -1)
