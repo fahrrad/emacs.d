@@ -26,8 +26,6 @@
 
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
-
-;; Scala- package
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
@@ -45,11 +43,17 @@
 ;; SLIME
 (add-to-list 'load-path "~/.emacs.d/elisp/ext/slime")
 (require 'slime-autoloads)
-(setq slime-contribs '(slime-fancy))
+(setq slime-contribs '(slime-fancy slime-banner))
 (load (expand-file-name "~/quicklisp\\slime-helper.el"))
 (setq inferior-lisp-program "clisp")
 (slime-setup)
 (add-to-list 'slime-mode-hook 'show-paren-mode)
+(add-to-list 'slime-mode-hook 'paredit-mode)
+(add-hook 'slime-mode-hook
+	  (lambda ()
+	    (unless (slime-connected-p)
+	      (save-excursion 
+		(slime)))))
 
 
 (custom-set-variables
@@ -342,6 +346,8 @@ so change the default 'F' binding in the agenda to allow both"
 ; +----------------------+
 ;; Run current file
 (global-set-key (kbd "<f11>") 'run-current-file)
+(global-set-key (kbd "C-c s") 'slime-selector)
+
 
 ;; Winner mode saves the configuration of windws. I can toggle previous 
 ;; configurations with C-c left|right
