@@ -20,6 +20,7 @@
 (package-initialize)
 (setq my-packages '(paredit
 		    ;; cider installed via git
+		    cider
 		    clojure-mode ;; cider depends on these
 		    dash ;; cider depends on these
 		    pkg-info ;; cider depends on these
@@ -76,12 +77,6 @@
 ;; Add this file to the agenda
 (setq org-agenda-files "")
 
-;; haskell-mode
-(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -101,11 +96,6 @@
 (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-
-;; SLIME
-(add-to-list 'load-path "~/.emacs.d/elisp/ext/slime")
-(require 'slime-autoloads)
-(setq inferior-lisp-program "clisp")
 
 (add-hook 'slime-mode-hook 'show-paren-mode)
 (add-hook 'slime-mode-hook 'paredit-mode)
@@ -130,16 +120,13 @@
 
 
 ;; Windows shortcuts support
-(add-to-list 'load-path "~/.emacs.d/elisp/ext")
-(require 'w32-symlinks)
+;; (add-to-list 'load-path "~/.emacs.d/elisp/ext")
+;; (require 'w32-symlinks)
 
 ;; color-scheme
 (require 'color-theme)
 (color-theme-initialize)
 (color-theme-standard)
-
-;; dot mode
-(load-file "~/.emacs.d/elisp/ext/graphviz-dot-mode.el") 
 
 ;; No toolbar please
 (tool-bar-mode -1)
