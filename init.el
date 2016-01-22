@@ -12,6 +12,8 @@
   "Load a file in current user's configuration directory"
   (load-file (expand-file-name file user-init-dir)))
 
+(load-user-file "local.el")
+
 ;;-------------------------------------------------------------
 ;;-- Packages
 ;; ------------------------------------------------------------
@@ -25,7 +27,7 @@
 		    dash ;; cider depends on these
 		    pkg-info ;; cider depends on these
 		      color-theme
-		      icicles
+		      ;;icicles
 		      rainbow-delimiters))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -53,12 +55,36 @@
 ;; ------------------------------------------------------------
 ;; -- CONFIG MODES
 ;; ------------------------------------------------------------
-
 ;;; turn on syntax hilighting
 (global-font-lock-mode 1)
 
+;; Expand region
+(require 'expand-region)
+(global-set-key (kbd "C-@") 'er/expand-region)
+
+;; emacs and Python
+(elpy-enable)
+
+;; to many rope bugs...
+(setq elpy-rpc-backend "jedi")
+
+;; projectile
+(projectile-global-mode)
+
+;; flx-ido
+(require 'flx-ido)
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+
+;; sqlplus mode
+(require 'sqlplus)
+
 ;; ORG mode
-(setq org-directory "~/archive/org")
+(setq org-directory "~/host/archive/org")
 
 ;;; Global keys for org mode
 (global-set-key "\C-cl" 'org-store-link)
@@ -85,8 +111,10 @@
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t)
- '(org-agenda-files (quote ("~/archive/org/wardgtd.org")))
+ '(org-agenda-files (quote ("~/host/archive/org/wardgtd.org")))
  '(python-shell-exec-path (quote ("C:/Python33")))
+ '(sqlplus-command "sqlplus64")
+ '(sqlplus-html-output-header "Fri Jan 15 13:43:37 2016<br><br>")
  '(w32-symlinks-handle-shortcuts t))
 
 ;; Markdown Mode
@@ -101,8 +129,6 @@
 (add-hook 'slime-mode-hook 'paredit-mode)
 ;;;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq slime-contribs '(slime-fancy))
-
-(icy-mode 1)
 
 ;; CIDER
 (add-to-list 'load-path "~/.emacs.d/elisp/ext/cider")
@@ -125,13 +151,15 @@
 
 ;; color-scheme
 (require 'color-theme)
+(require 'color-theme-solarized)
 (color-theme-initialize)
-(color-theme-standard)
+(color-theme-solarized-light)
 
 ;; No toolbar please
 (tool-bar-mode -1)
 ;; No menubar please
 (menu-bar-mode -1)
+(scroll-bar-mode -1)
  
 ;; ------------------------------------------------------------------------
 ;; Keyboard Shortcuts  
@@ -195,12 +223,14 @@
 ;; windows, where the output is lagging behind...
 
 (setq inhibit-startup-message t)
-(find-file "~/archive/org/wardgtd.org")
+
 
 ;; Done, start listening
 (server-start)
 
-
+(require 'virtualenvwrapper)
+(venv-initialize-interactive-shells) ;; if you want interactive shell support
+(setq venv-location "/home/ward/.virtualenvs/")
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -210,3 +240,7 @@
  )
 
 
+(find-file "~/.emacs.d/init.el")
+
+;; project specific settings
+(load-user-file "project.el")
