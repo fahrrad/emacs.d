@@ -26,9 +26,15 @@
 		    clojure-mode ;; cider depends on these
 		    dash ;; cider depends on these
 		    pkg-info ;; cider depends on these
-		      color-theme
-		      ;;icicles
-		      rainbow-delimiters))
+		    color-theme
+		    expand-region  ;; Coole package intellij
+		    ;;icicles
+		    elpy
+		    projectile
+		    flx-ido
+		    color-theme-solarized
+
+		    rainbow-delimiters))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ;;("marmalade" . "http://marmalade-repo.org/packages/")
@@ -81,7 +87,7 @@
 (setq ido-use-faces nil)
 
 ;; sqlplus mode
-(require 'sqlplus)
+;; (require 'sqlplus)
 
 ;; ORG mode
 (setq org-directory "~/host/archive/org")
@@ -227,10 +233,6 @@
 
 ;; Done, start listening
 (server-start)
-
-(require 'virtualenvwrapper)
-(venv-initialize-interactive-shells) ;; if you want interactive shell support
-(setq venv-location "/home/ward/.virtualenvs/")
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
