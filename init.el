@@ -22,10 +22,8 @@
 (package-initialize)
 (setq my-packages '(paredit
 		    ;; cider installed via git
-		    cider
-		    clojure-mode ;; cider depends on these
 		    dash ;; cider depends on these
-		    pkg-info ;; cider depends on these
+		    ;; pkg-info ;; cider depends on these
 		    color-theme
 		    expand-region  ;; Coole package intellij
 		    ;;icicles
@@ -90,7 +88,7 @@
 ;; (require 'sqlplus)
 
 ;; ORG mode
-(setq org-directory "~/host/archive/org")
+(setq org-directory "/Users/wcoessen/Archive/org")
 
 ;;; Global keys for org mode
 (global-set-key "\C-cl" 'org-store-link)
@@ -107,17 +105,18 @@
 	 "* TODO %?\n  %i")))
 
 ;; Add this file to the agenda
-(setq org-agenda-files "")
+(setq org-agenda-files (concat org-directory "/agenda.org"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(geiser-active-implementations (quote (racket)))
+ '(geiser-racket-binary "racket")
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t)
- '(org-agenda-files (quote ("~/host/archive/org/wardgtd.org")))
  '(python-shell-exec-path (quote ("C:/Python33")))
  '(sqlplus-command "sqlplus64")
  '(sqlplus-html-output-header "Fri Jan 15 13:43:37 2016<br><br>")
@@ -138,7 +137,7 @@
 
 ;; CIDER
 (add-to-list 'load-path "~/.emacs.d/elisp/ext/cider")
-(require 'cider)
+;; (require 'cider)
 (add-hook 'cider-mode-hook 'paredit-mode)
 (add-hook 'clojure-mode-hook 'show-paren-mode)
 (add-hook 'cider-repl-mode-hook 'show-paren-mode)
@@ -191,21 +190,14 @@
   "Adds the dirs to the exec-path and PATH env var"
   (push dir exec-path)
   (setenv "PATH"
-          (concat (getenv "PATH") ";"
+          (concat (getenv "PATH") ":"
                   dir)))
 
-(setq exec-dirs '("c:/Users/coessewa/apps" 
-                  "c:/Users/coessewa/apps/graphviz/bin/"
-		  "C:/Program Files (x86)/clisp-2.49"
-		  "C:/Program Files/Haskell Platform/2014.2.0.0/bin"
-		  "C:/Program Files (x86)/GnuWin32/bin"
-		  "C:/Program Files (x86)/svn-win32-1.8.10/bin"))
+(setq exec-dirs '("/Applications/Racket v6.6/bin"))
 
 (mapc 'add-path-to-exec-dir exec-dirs )
 
 ;; Bypass proxy for following hosts
-(setenv "http_no_proxy" "*.cropdesign.local")
-(setenv "no_proxy" (getenv "http_no_proxy"))
 
 (defmacro after (mode &rest body)
   `(eval-after-load ,mode
