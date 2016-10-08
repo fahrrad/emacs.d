@@ -105,7 +105,7 @@
 	 "* TODO %?\n  %i")))
 
 ;; Add this file to the agenda
-(setq org-agenda-files (concat org-directory "/agenda.org"))
+(setq org-agenda-files (mapcar (lambda (x) (concat org-directory x )) '("/agenda.org" "/wardgtd.org" )))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
