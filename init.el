@@ -19,6 +19,7 @@
 ;; ------------------------------------------------------------
 ;; Packages
 (require 'package)
+
 (package-initialize)
 (setq my-packages '(paredit
 		    ;; cider installed via git
@@ -26,22 +27,18 @@
 		    ;; pkg-info ;; cider depends on these
 		    color-theme
 		    expand-region  ;; Coole package intellij
-		    ;;icicles
+                    better-defaults
+                    material-theme
 		    elpy
 		    projectile
+                    magit
 		    flx-ido
-		    color-theme-solarized
-
+;;		    color-theme-solarized
 		    rainbow-delimiters))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ;;("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
-
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;(add-to-list 'package-archives
-;;             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (setq package-enable-at-startup t)
 ;; See if some packages needs reinstalling
@@ -53,6 +50,13 @@
      (package-install p)))
 
 
+;; -----------------------------------------------------------
+;; -- Autosave in one folder
+;; -----------------------------------------------------------
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 
 
@@ -68,6 +72,8 @@
 
 ;; emacs and Python
 (elpy-enable)
+(setq python-shell-virtualenv-path "/Users/wcoessen/anaconda3/envs/sandbox/bin/python")
+(setenv "WORKON_HOME" "/Users/wcoessen/anaconda3/envs")
 
 ;; to many rope bugs...
 (setq elpy-rpc-backend "jedi")
@@ -107,21 +113,6 @@
 ;; Add this file to the agenda
 (setq org-agenda-files (mapcar (lambda (x) (concat org-directory x )) '("/agenda.org" "/wardgtd.org" )))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(geiser-active-implementations (quote (racket)))
- '(geiser-racket-binary "racket")
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-log t)
- '(haskell-process-suggest-remove-import-lines t)
- '(python-shell-exec-path (quote ("C:/Python33")))
- '(sqlplus-command "sqlplus64")
- '(sqlplus-html-output-header "Fri Jan 15 13:43:37 2016<br><br>")
- '(w32-symlinks-handle-shortcuts t))
-
 ;; Markdown Mode
 (add-to-list 'load-path "~/.emacs.d/elisp/ext/markdown-mode")
 (autoload 'markdown-mode "markdown-mode"
@@ -150,21 +141,26 @@
 ;; (add-hook 'cider-repl-mode-hook 'company-mode)
 
 
+;; j2-mode and swank to have cider-like repl whith JS
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
+
 ;; Windows shortcuts support
 ;; (add-to-list 'load-path "~/.emacs.d/elisp/ext")
 ;; (require 'w32-symlinks)
 
 ;; color-scheme
-(require 'color-theme)
-(require 'color-theme-solarized)
-(color-theme-initialize)
-(color-theme-solarized-light)
+(load-theme 'material t)
 
 ;; No toolbar please
 (tool-bar-mode -1)
 ;; No menubar please
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+
+;; global line numbers
+(global-linum-mode t)
  
 ;; ------------------------------------------------------------------------
 ;; Keyboard Shortcuts  
@@ -173,6 +169,7 @@
 ;; Run current file
 (global-set-key (kbd "<f11>") 'run-current-file)
 (global-set-key (kbd "C-c s") 'slime-selector)
+(global-set-key (kbd "<f8>") 'magit-status)
 
 
 ;; Winner mode saves the configuration of windws. I can toggle previous 
@@ -193,11 +190,9 @@
           (concat (getenv "PATH") ":"
                   dir)))
 
-(setq exec-dirs '("/Applications/Racket v6.6/bin"))
+(setq exec-dirs '("/Applications/Racket v6.6/bin" "/Users/wcoessen/bin"))
 
 (mapc 'add-path-to-exec-dir exec-dirs )
-
-;; Bypass proxy for following hosts
 
 (defmacro after (mode &rest body)
   `(eval-after-load ,mode
@@ -217,7 +212,7 @@
                    (add-to-list 'ac-sources 'ac-source-ropemacs)
                    (auto-complete-mode))))
 
-(setenv "PYTHONUNBUFFERED" "x") ;; Solves an issue with Python 3 on
+;; (setenv "PYTHONUNBUFFERED" "x") ;; Solves an issue with Python 3 on
 ;; windows, where the output is lagging behind...
 
 (setq inhibit-startup-message t)
@@ -233,8 +228,19 @@
  ;; If there is more than one, they won't work right.
  )
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(elpy-rpc-python-command "/Users/wcoessen/anaconda3/bin/python")
+ '(geiser-active-implementations (quote (racket)))
+ '(geiser-racket-binary "racket")
+ '(pyvenv-virtualenvwrapper-python "/Users/wcoessen/anaconda3/bin/python")
+ '(pyvenv-workon "sandbox"))
 
 (find-file "~/.emacs.d/init.el")
 
 ;; project specific settings
 (load-user-file "project.el")
+
