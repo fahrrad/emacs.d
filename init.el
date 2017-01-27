@@ -22,22 +22,25 @@
 
 (package-initialize)
 (setq my-packages '(paredit
-		    ;; cider installed via git
+		    cider
 		    dash ;; cider depends on these
 		    ;; pkg-info ;; cider depends on these
 		    color-theme
 		    expand-region  ;; Coole package intellij
-                    better-defaults
-                    material-theme
+        better-defaults
+        material-theme
 		    elpy
 		    projectile
-                    magit
+        magit
 		    flx-ido
-;;		    color-theme-solarized
-		    rainbow-delimiters))
+        js2-mode
+        ac-js2
+		    rainbow-delimiters
+        web-beautify
+        emojify))
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ;;("marmalade" . "http://marmalade-repo.org/packages/")
+                         ;; ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (setq package-enable-at-startup t)
@@ -90,9 +93,6 @@
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
 
-;; sqlplus mode
-;; (require 'sqlplus)
-
 ;; ORG mode
 (setq org-directory "/Users/wcoessen/Archive/org")
 
@@ -108,7 +108,12 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline (concat org-directory "/wardgtd.org") "Tasks")
-	 "* TODO %?\n  %i")))
+             "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org"))
+             "* %?\nEntered on %U\n  %i\n  %a")))
+
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "WAITING(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
 
 ;; Add this file to the agenda
 (setq org-agenda-files (mapcar (lambda (x) (concat org-directory x )) '("/agenda.org" "/wardgtd.org" )))
@@ -160,7 +165,7 @@
 (scroll-bar-mode -1)
 
 ;; global line numbers
-(global-linum-mode t)
+;; (global-linum-mode )
  
 ;; ------------------------------------------------------------------------
 ;; Keyboard Shortcuts  
@@ -170,6 +175,8 @@
 (global-set-key (kbd "<f11>") 'run-current-file)
 (global-set-key (kbd "C-c s") 'slime-selector)
 (global-set-key (kbd "<f8>") 'magit-status)
+(global-set-key (kbd "<home>") 'move-beginning-of-line)
+(global-set-key (kbd "<end>") 'move-end-of-line)
 
 
 ;; Winner mode saves the configuration of windws. I can toggle previous 
@@ -190,7 +197,7 @@
           (concat (getenv "PATH") ":"
                   dir)))
 
-(setq exec-dirs '("/Applications/Racket v6.6/bin" "/Users/wcoessen/bin"))
+(setq exec-dirs '("/usr/local/bin/" "/Applications/Racket v6.6/bin" "/Users/wcoessen/bin"))
 
 (mapc 'add-path-to-exec-dir exec-dirs )
 
@@ -241,6 +248,30 @@
 
 (find-file "~/.emacs.d/init.el")
 
-;; project specific settings
-(load-user-file "project.el")
+(cd "/Users/wcoessen")
+(setq default-tab-width 2)
 
+(add-hook 'after-init-hook #'global-emojify-mode)
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+(setq js2-highlight-level 3)
+(set-face-attribute 'default nil :height 140)
+
+(defun pretty-lambda ()
+  "make some word or string show as pretty Unicode symbols"
+  (setq prettify-symbols-alist
+        '(
+          ("lambda" . 955) ; λ
+          )))
+
+(add-hook 'scheme-mode-hook 'pretty-lambda)
+(add-hook 'emacs-lisp-mode 'pretty-lambda)
+(add-hook 'lisp-mode 'paredit-mode)
+
+(global-prettify-symbols-mode 1)
+
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-?") 'mc/mark-next-like-this)
